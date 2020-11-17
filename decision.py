@@ -11,9 +11,11 @@ class Decision:
 
     def simple_sat_solve(self):
         print('TODO: call the raw SimpleSAT solver')
+        print('Just clone SimpleSAT and make calls to it')
 
     def my_sat_solve(self):
         print('TODO: call modified SimpleSAT with clause learning + heuristics')
+        print('Fork SimpleSAT and make modifications')
 
     def industry_sat_solve(self):
         print('TODO: call PythonSAT')

@@ -1,8 +1,6 @@
 import importlib
 from graphics import *
 util = importlib.import_module('util')
-decision = importlib.import_module('decision')
-optimization = importlib.import_module('optimization')
 
 # Generate a random instance of a stitching pattern
 # create a window

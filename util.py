@@ -1,5 +1,6 @@
 import random
 import numpy as np
+from graphics import *
 
 """
 Generates a random instance of the embroidery problem.
@@ -70,5 +71,25 @@ def random_pattern(m, n, density=0.1):
 
 # TODO: add a benchmarking utility! Would be nice to have consistent format here
 
-# TODO: add a graph printing utility! Will be helpful to visualize graphs
-#   could have print front and print back (though back will always be a complete graph)
+# Graph visualization util
+def visual(m, n):
+    win = GraphWin(width = 200, height = 200)
+    # set the coordinates of the window
+    # bottom left is (0, 0) and top right is (m, n)
+    win.setCoords(0, 0, m, n)
+
+    graph = random_pattern(m, n)
+    # Print out the graph in a pretty-ish manner
+    for vertex in graph:
+        print(vertex, graph[vertex])
+        pt1 = Point(vertex[0], vertex[1])
+        pt1.draw(win)
+        for edge in graph[vertex]:
+            pt2 = Point(edge[0], edge[1])
+            pt2.draw(win)
+            line = Line(pt1, pt2)
+            line.draw(win)
+
+    # Pause before closing
+    win.getMouse()
+    win.close()

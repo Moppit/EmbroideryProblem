@@ -19,8 +19,8 @@ def random_pattern(m, n, density=0.1):
         num = random.random()
         if num < density:
             # Generate two stitching endpoints
-            start_row, start_col = (np.random.choice(range(m)), np.random.choice(range(n)))
-            end_row, end_col = (np.random.choice(range(m)), np.random.choice(range(n)))
+            start_row, start_col = (np.random.choice(range(m+1)), np.random.choice(range(n+1)))
+            end_row, end_col = (np.random.choice(range(m+1)), np.random.choice(range(n+1)))
             # Ensure we don't get self loops
             if (start_row, start_col) != (end_row, end_col):
                 # Check if endpoints are in the graph -- add the edges
@@ -72,13 +72,13 @@ def random_pattern(m, n, density=0.1):
 # TODO: add a benchmarking utility! Would be nice to have consistent format here
 
 # Graph visualization util
-def visual(m, n):
-    win = GraphWin(width = 200, height = 200)
+def visual(m, n, pattern):
+    win = GraphWin(width = 800, height = 800)
     # set the coordinates of the window
     # bottom left is (0, 0) and top right is (m, n)
-    win.setCoords(0, 0, m, n)
+    win.setCoords(-1, -1, m+1, n+1)
 
-    graph = random_pattern(m, n)
+    graph = pattern
     # Print out the graph in a pretty-ish manner
     for vertex in graph:
         print(vertex, graph[vertex])

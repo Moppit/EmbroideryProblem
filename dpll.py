@@ -20,6 +20,8 @@ class DPLL:
                 edge = (v2, v1)
             else:
                 print('ERROR! Caught a self loop in dpll.py')
+                print(v1, v2)
+                exit(0)
                 edge = ((0, 0), (0, 0))
         return edge
 
@@ -49,12 +51,32 @@ class DPLL:
     """
     Brute force DPLL algorithm for embroidery problem.
     @param start_vertex: where the cycle started (identifier)
+    @param current_vertex: where we are currently (identifier)
     @param front: whether we're on front or back of fabric (boolean)
+    @param taken_so_far: front edges we've taken. DO NOT include back edges. (List[identifiers])
     @return: minimum value alternating tour (float)
     """
-    def dpll(self, start_vertex, front, taken_so_far):
-        # Base case: we've completed a tour!
-        # Base case: we're stuck -- there are no edges to take on front side and not a valid tour
-        # Recurse: try either the front or back edges, whatever is appropriate
-            # Track sum so far in the return statements
-        print('DPLL algo TODO')
+    def dpll(self, start_vertex, current_vertex, front, taken_so_far):
+        # Base case: we've completed a tour! Return so we can find min
+        if set(taken_so_far) == set(self.front_edges.keys()) and current_vertex == start_vertex:
+            return 0
+        # Front stitch
+        if front:
+            adjacency = self.pattern[current_vertex]
+            options = []
+            for next_vertex in adjacency:
+                edge = self.get_formatted_edge(current_vertex, next_vertex)
+                if edge not in taken_so_far:
+                    # Recurse: try all non-taken front edges -- return min value
+                    options.append(self.get_edge_length(edge) + self.dpll(start_vertex, next_vertex, False, taken_so_far + [edge]))
+            # Find minimum, unless we didn't find any, in which case return infinity
+            return min(options, default=math.inf)   # Returns infinity if branch invalid... TODO: probably a better solution out there
+        # Back stitch
+        else:
+            # Recurse: try all back edges -- be sure to return the minimum value
+            options = []
+            for next_vertex in self.vertices:
+                if current_vertex != next_vertex:
+                    edge = self.get_formatted_edge(current_vertex, next_vertex)
+                    options.append(self.get_edge_length(edge) + self.dpll(start_vertex, next_vertex, True, taken_so_far))
+            return min(options, default=math.inf)

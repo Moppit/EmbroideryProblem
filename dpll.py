@@ -56,6 +56,7 @@ class DPLL:
     @param taken_so_far: front edges we've taken. DO NOT include back edges. (List[identifiers])
     @return: minimum value alternating tour (float)
     """
+    # TODO: modify s.t. it returns a tour instead of the optimzal value
     def dpll(self, start_vertex, current_vertex, front, taken_so_far):
         # Base case: we've completed a tour! Return so we can find min
         if set(taken_so_far) == set(self.front_edges.keys()) and current_vertex == start_vertex:

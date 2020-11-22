@@ -3,6 +3,22 @@ import numpy as np
 from graphics import *
 
 """
+Graph class
+"""
+class Node:
+    def __init__(self):
+        self.identifier = ''
+        self.contents = None
+        self.edges = []
+
+class Graph:
+    def __init__(self):
+        self.graph = None
+
+    def insert_node(self, identifier, contents):
+        print('TODO: add node to graph')
+
+"""
 Generates a random instance of the embroidery problem.
 Inputs:
     m: number rows in Euclidean plane

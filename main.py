@@ -38,6 +38,5 @@ print(min_val)
 
 # Testing Arkin
 approx2_obj = arkin.Arkin(pattern)
-g_prime = approx2_obj.find_components()
-approx2_obj.prim(g_prime)
-print(g_prime)
+t_approx_len = approx2_obj.approx_2()
+print(t_approx_len)

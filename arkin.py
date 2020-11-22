@@ -31,8 +31,22 @@ class Arkin:
         y_diff = edge[0][1] - edge[1][1]
         return math.sqrt(x_diff**2 + y_diff**2)
 
+    """
+    For connected instances of G, we can us a polynomial algorithm
+    @param: None
+    @return dist: optimal tour length (float)
+    """
     def b_matchings(self):
-        print('TODO: b-matching algorithm for individual components')
+        # Idea: we want to ensure that #back edges = #front edges for all vertices
+        # "Stage 1. A minimum cost flow problem and its dual are solved (a Hitchcock transposition problem)."
+        # "Stage 2. The solutions are processed to obtain optimal 'symmetric' half-integral solutions and 
+        #           then to obtain nearly optimal integral solutions."
+        # "Stage 3. The nearly optimal solutions are used as input to Pulleyblank's b-matching algorithm."
+
+        # So, we do the min b-matching problem on the back graph with vertex weights b(v) = deg_f(v)
+        # Algo in paper: looks like it wants a min b-matching, whereas paper wants max b-matching
+        # Then return the size of B edges + size of E edges
+        return 0
 
     """
     Finds a connected component within the graph.
@@ -94,10 +108,8 @@ class Arkin:
     """
     def prim(self, g_prime):
         mst_edges = []
-        # Get list of vertices in V' -- keep sorted
+        # Get list of vertices in V' and init queue
         v_prime = list(g_prime.keys())
-        # Get a list of the edges in E'
-        e_prime = {}
         queue = []
         # Choose a starting vertex and add all of its edges to the queue.
         start = v_prime.pop(0)
@@ -107,24 +119,22 @@ class Arkin:
         while queue:
             queue.sort()
             to_add = queue.pop(0)
+            edge_weight = to_add[0]
+            edge = to_add[1]
+            end_pt_1 = edge[0]
+            end_pt_2 = edge[1]
             # Check if one of the endpoints is still a vertex in the graph
-            print('TODO')
-
-        # for vertex in g_prime:
-        #     for edge in g_prime[vertex]:
-        #         dist = self.get_edge_length(edge)
-        #         queue.append((dist, edge))
-        #         if edge not in e_prime:
-        #             e_prime[edge] = []
-        #         e_prime[edge].append(vertex)
-        # # Init list which you will compare to V'
-        # v_included = []
-        # while v_included != v_prime:
-        #     # Take the smallest item off queue
-        #     to_check = queue.pop(0)
-        #     # If one endpoint not covered yet, add to mst edges
-        #     v_included.sort()
-        # Now go through each of the weights from least to greatest until all vertices covered
+            found_new_vertex = False
+            for vertex in v_prime:
+                if end_pt_1 in vertex or end_pt_2 in vertex:
+                    found_new_vertex = True
+                    # Add all edges from the new vertex
+                    for e in g_prime[vertex]:
+                        queue.append((self.get_edge_length(e), e))
+                    # Pop vertex from v'
+                    v_prime.remove(vertex)
+            if found_new_vertex:
+                mst_edges.append(edge)
         return mst_edges
 
     """
@@ -154,6 +164,8 @@ class Arkin:
             self.t_approx = self.front_edges + self.back_edges
             self.remove_consecutive()
             # Return length of the tour
+            # TODO: come back and fill in
+            return 5
             """
             length = 0
             for edge in self.t_approx:

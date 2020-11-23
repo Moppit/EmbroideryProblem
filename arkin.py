@@ -75,7 +75,8 @@ class Arkin:
             # Do DFS traversal
             component = self.dfs(to_check, [], [to_check])
             for node in component:
-                unvisited.remove(node)
+                if node in unvisited:
+                    unvisited.remove(node)
             components.append(component)
 
         # Create G'
@@ -136,12 +137,6 @@ class Arkin:
             if found_new_vertex:
                 mst_edges.append(edge)
         return mst_edges
-
-    """
-    Removes redundant back edges
-    """
-    def remove_consecutive(self):
-        print('remove consecutive back edges from T_approx')
     
     """
     Finds a two approximation for the embroidery problem by the Arkin et al. algorithm.
@@ -157,17 +152,17 @@ class Arkin:
             # Use Prim's to find the MST
             mst = self.prim(g_prime)
             # Find all front edges from given pattern
-            front_edges = []
-            self.front_edges = front_edges
+            for vertex in self.pattern:
+                adj_list = self.pattern[vertex]
+                for adj in adj_list:
+                    edge = self.get_formatted_edge(vertex, adj)
+                    if edge not in self.front_edges:
+                        self.front_edges.append(edge)
             # Remove consecutive back edges
-            self.back_edges = mst + mst + front_edges 
+            self.back_edges = mst + mst + self.front_edges 
             self.t_approx = self.front_edges + self.back_edges
-            self.remove_consecutive()
             # Return length of the tour
-            # TODO: come back and fill in
-            return 5
-            """
-            length = 0
+            total_len = 0
             for edge in self.t_approx:
-                length += len(edge)
-            """
+                total_len += self.get_edge_length(edge)
+            return total_len

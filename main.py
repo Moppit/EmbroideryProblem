@@ -6,10 +6,19 @@ arkin = importlib.import_module('arkin')
 
 # Generate a random instance of a stitching pattern
 # create a window
-m = 3
+m = 4
 n = 3
 
 pattern = util.random_pattern(m, n)
+# Test case
+# pattern = {
+#     (2, 2): [(1, 1)],
+#     (1, 1): [(2, 2)],
+#     (1, 0): [(3, 3), (0, 0), (0, 1)],
+#     (3, 3): [(1, 0)],
+#     (0, 0): [(0, 1), (1, 0)],
+#     (0, 1): [(0, 0), (1, 0)]
+# }
 util.visual(m, n, pattern)
 
 # TODO: write some known test cases so you can verify whether it's working or not!
@@ -35,8 +44,18 @@ for vertex in list(dpll_obj.pattern.keys()):
         min_val = new_val
 print(min_val)
 """
+# Testing DPLL
+dpll_obj = dpll.DPLL(pattern)
+dpll_obj.make_graph()
+min_val = math.inf
+for vertex in list(dpll_obj.pattern.keys()):
+    start = vertex
+    new_val = dpll_obj.dpll(start, start, True, [])
+    if new_val < min_val:
+        min_val = new_val
+print('DPLL solution:', min_val)
 
 # Testing Arkin
 approx2_obj = arkin.Arkin(pattern)
 t_approx_len = approx2_obj.approx_2()
-print(t_approx_len)
+print('Arkin 2-approx solution', t_approx_len)

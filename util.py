@@ -26,34 +26,34 @@ Inputs:
     density: (defaults = 0.5) determines the ratio of stitches to non-stitched portions
 Outputs: Euclidean graph
 """
-def random_pattern(m, n, density=0.1):
+def random_pattern(m, n, num_front_stitches=1):#density=0.1):
     # Create a Euclidean graph in m x n plane
     # There are at most m*n vertices, so there are at most a complete graph of front stitches
-    num_front_stitches = int((m*n)*(m*n-1)/2)
+    # num_front_stitches = int((m*n)*(m*n-1)/2)
     graph = {}
     for i in range(num_front_stitches):
-        num = random.random()
-        if num < density:
-            # Generate two stitching endpoints
-            start_row, start_col = (np.random.choice(range(m+1)), np.random.choice(range(n+1)))
-            end_row, end_col = (np.random.choice(range(m+1)), np.random.choice(range(n+1)))
-            # Ensure we don't get self loops
-            if (start_row, start_col) != (end_row, end_col):
-                # Check if endpoints are in the graph -- add the edges
-                # Start node
-                if (start_row, start_col) not in graph:
-                    # Add new vertex if not already in graph
-                    graph[(start_row, start_col)] = []
-                # Check if edge should be added
-                if (end_row, end_col) not in graph[(start_row, start_col)]:
-                    graph[(start_row, start_col)].append((end_row, end_col))
-                # End node
-                if (end_row, end_col) not in graph:
-                    # Add new vertex if not already in graph
-                    graph[(end_row, end_col)] = []
-                # Check if edge should be added
-                if (start_row, start_col) not in graph[(end_row, end_col)]:
-                    graph[(end_row, end_col)].append((start_row, start_col))
+        # num = random.random()
+        # if num < density:
+        # Generate two stitching endpoints
+        start_row, start_col = (np.random.choice(range(m+1)), np.random.choice(range(n+1)))
+        end_row, end_col = (np.random.choice(range(m+1)), np.random.choice(range(n+1)))
+        # Ensure we don't get self loops
+        if (start_row, start_col) != (end_row, end_col):
+            # Check if endpoints are in the graph -- add the edges
+            # Start node
+            if (start_row, start_col) not in graph:
+                # Add new vertex if not already in graph
+                graph[(start_row, start_col)] = []
+            # Check if edge should be added
+            if (end_row, end_col) not in graph[(start_row, start_col)]:
+                graph[(start_row, start_col)].append((end_row, end_col))
+            # End node
+            if (end_row, end_col) not in graph:
+                # Add new vertex if not already in graph
+                graph[(end_row, end_col)] = []
+            # Check if edge should be added
+            if (start_row, start_col) not in graph[(end_row, end_col)]:
+                graph[(end_row, end_col)].append((start_row, start_col))
 
     return graph
 

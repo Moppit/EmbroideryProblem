@@ -3,6 +3,7 @@ from concorde.tests.data_utils import get_dataset_path
 import tsp
 import importlib
 util = importlib.import_module('util')
+import math
 # from python_tsp.exact import solve_tsp_dynamic_programming
 
 class TSP_Solver:
@@ -109,7 +110,6 @@ class TSP_Solver:
     Linear programming approach to solving TSP exactly many times, but not guaranteed.
     """
     def tsp(self):
-        # TODO: For symmetric, make sure to subtract 2|V| at the end!
         r = range(len(self.symmetric_graph))
         # Dictionary of distance
         dist = {(i, j): self.symmetric_graph[i][j] for i in r for j in r}
@@ -126,13 +126,29 @@ class TSP_Solver:
         created to this day. Uses branch and cut method (linear programming).
     """
     def pyconcorde(self):
-        # TODO: For symmetric, make sure to subtract 2|V| at the end!
-        # fname = get_dataset_path("berlin52")
         # TODO: maybe do timing within here, since will have to do some processing
         # and writing to file stuff first
-        print('=======================================================================')
+        # Create tsp file
+        filename = 'test.tsp'
+        file_write = open(filename, 'w')
+        file_write.write('NAME: test\n')
+        file_write.write('TYPE: TSP\n')
+        file_write.write('COMMENT: testing Concorde on symmetric instance\n')
+        file_write.write('DIMENSION: ' + str(len(self.symmetric_graph)) + '\n')
+        file_write.write('EDGE_WEIGHT_TYPE: EXPLICIT\n')
+        file_write.write('EDGE_WEIGHT_FORMAT: FULL_MATRIX\n')
+        file_write.write('EDGE_WEIGHT_SECTION\n')
+        # Go through each row of the matrix, round up value
+        for row in self.symmetric_graph:
+            to_add = ''
+            for val in row:
+                to_add += str(math.ceil(val)) + ' '
+            file_write.write(to_add)
+        file_write.write('EOF')
+        file_write.close()
         # print(fname)
-        solver = TSPSolver.from_tspfile('t2.tsp')
+        solver = TSPSolver.from_tspfile(filename)
         solution = solver.solve()
-        print(solution.found_tour)
-        print(solution.optimal_value)
+        print('=== found tour? === :', solution.found_tour)
+        print('=== optimal val === :', solution.optimal_value)
+        print('=== subbed dist === :', solution.optimal_value - 2*len(self.symmetric_graph))

@@ -66,6 +66,6 @@ pattern = {
 # Testing TSP solver
 solver = tsp.TSP_Solver(pattern)
 solver.symmetric_reduction()
-solver.tsp()
-# solver.pyconcorde()
+# solver.tsp()
+solver.pyconcorde()
 # solver.tsp()

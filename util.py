@@ -1,3 +1,4 @@
+import math
 import random
 import numpy as np
 from graphics import *
@@ -84,6 +85,24 @@ def random_pattern(m, n, num_front_stitches=1):#density=0.1):
     }
 
     """
+
+"""
+Helper function: get distance between edge (which is a tuple of 2 coordinates)
+"""
+def get_edge_length(edge):
+        # Assume a edge is a tuple of 2 tuples ((a,b), (c,d))
+        x_diff = edge[0][0] - edge[1][0]
+        y_diff = edge[0][1] - edge[1][1]
+        return math.sqrt(x_diff**2 + y_diff**2)
+
+"""
+Helper function: get distance between two given coordinates
+"""
+def get_edge_length(a, b):
+        # Assume a edge is a tuple of 2 tuples ((a,b), (c,d))
+        x_diff = a[0] - b[0]
+        y_diff = a[1] - b[1]
+        return math.sqrt(x_diff**2 + y_diff**2)
 
 # TODO: add a benchmarking utility! Would be nice to have consistent format here
 

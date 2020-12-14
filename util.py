@@ -32,7 +32,9 @@ def random_pattern(m, n, num_front_stitches=1):#density=0.1):
     # There are at most m*n vertices, so there are at most a complete graph of front stitches
     # num_front_stitches = int((m*n)*(m*n-1)/2)
     graph = {}
-    for i in range(num_front_stitches):
+    # Use a while loop to avoid skipping stitches if repeats happen
+    i = 0
+    while i < num_front_stitches:
         # num = random.random()
         # if num < density:
         # Generate two stitching endpoints
@@ -55,6 +57,8 @@ def random_pattern(m, n, num_front_stitches=1):#density=0.1):
             # Check if edge should be added
             if (start_row, start_col) not in graph[(end_row, end_col)]:
                 graph[(end_row, end_col)].append((start_row, start_col))
+            # Increment i
+            i += 1
 
     return graph
 

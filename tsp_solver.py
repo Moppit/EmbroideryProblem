@@ -161,6 +161,10 @@ class TSP_Solver:
     Linear programming approach to solving TSP with fairly good precision
     """
     def tsp(self):
+        # Edge case: check for no stitches
+        if len(self.multi_node_graph) == 0:
+            return 0
+
         # Dictionary of distance
         r = range(len(self.multi_node_graph))
         dist = {(i, j): self.multi_node_graph[i][j] for i in r for j in r}
@@ -180,6 +184,10 @@ class TSP_Solver:
         created to this day. Uses branch and cut method (linear programming).
     """
     def pyconcorde(self):
+        # Edge case: check for no stitches
+        if len(self.multi_node_graph) == 0:
+            return 0
+        
         # Create tsp file
         filename = 'embroidery.tsp'
         file_write = open(filename, 'w')

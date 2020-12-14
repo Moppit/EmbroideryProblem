@@ -24,6 +24,20 @@ pattern = {
     (0, 1): [(0, 0), (1, 0)]
 }
 
+connected_pattern = {
+    (2, 2): [(1, 1)],
+    (1, 1): [(2, 2), (3,3)],
+    (1, 0): [(3, 3), (0, 0), (0, 1)],
+    (3, 3): [(1, 0), (1,1)],
+    (0, 0): [(0, 1), (1, 0)],
+    (0, 1): [(0, 0), (1, 0)]
+}
+
+test = {
+    (0,0): [(1,1), (0,1)],
+    (1,1): [(0,0), (0,1)],
+    (0,1): [(0,0), (1,1)]
+}
 # util.visual(m, n, pattern)
 
 """
@@ -42,35 +56,20 @@ for num_stitches in range(1, int((m*n)*(m*n-1)/2)):
         for v in pattern:
             print(v, pattern[v])
 
-        # Create TSP solvers class
-        solver = tsp.TSP_Solver(pattern)
+        # Create arkin approx solver
+        approx = arkin.Arkin(pattern)
 
         # Concorde TSP Solver
         start_time = time.time()
-        solver.multi_node_reduction()
-        concorde_val = solver.pyconcorde()
+        arkin_val = approx.approx_2()
         end_time = time.time()
-        concorde_time = end_time - start_time
+        arkin_time = end_time - start_time
 
-        # Other more accurate but slower TSP Solver (do reduction again for fair comparison)
-        start_time = time.time()
-        solver.multi_node_reduction()
-        tsp_val = solver.tsp()
-        end_time = time.time()
-        tsp_time = end_time - start_time
-
-        # Write to files
+        # Sleep briefly for your computer's sanity
+        print('Finished trial', i, 'of', num_stitches, 'stitches')
 
         # Write to Concorde file
-        file_write = open('concorde_stitch_count.csv', 'a')
+        file_write = open('arkin_stitch_count.csv', 'a')
         # Format: m, n, num_stitches, num_vertices, i, time, value
-        file_write.write(str(m) + ',' + str(n) + ',' + str(num_stitches) + ',' + str(num_vertices) + ',' + str(i) + ',' + str(concorde_time) + ',' + str(concorde_val) + '\n')
+        file_write.write(str(m) + ',' + str(n) + ',' + str(num_stitches) + ',' + str(num_vertices) + ',' + str(i) + ',' + str(arkin_time) + ',' + str(arkin_val) + '\n')
         file_write.close()
-
-        # Write to other TSP solver file
-        file_write = open('tsp_stitch_count.csv', 'a')
-        # Format: m, n, num_stitches, num_vertices, i, time, value
-        file_write.write(str(m) + ',' + str(n) + ',' + str(num_stitches) + ',' + str(num_vertices) + ',' + str(i) + ',' + str(tsp_time) + ',' + str(tsp_val) + '\n')
-        file_write.close()
-
-        print('Finished trial', i, 'of', num_stitches, 'stitches')

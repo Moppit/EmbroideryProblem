@@ -8,6 +8,15 @@ Solvers included in this repository:
 - Arkin 2-approximation algorithm
 
 ## Getting Started
+
+### Dependencies
+Before running any code, install both PyConcorde and the Python `tsp` package.
+```
+> pip install pyconcorde
+> pip install tsp
+```
+
+### Starter Code
 To try out each solver, `main.py` contains some starter code. Run 
 ```
 > python main.py

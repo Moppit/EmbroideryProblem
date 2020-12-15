@@ -11,8 +11,16 @@ Solvers included in this repository:
 
 ### Dependencies
 Before running any code, install both PyConcorde and the Python `tsp` package.
+
+For PyConcorde, run the following commands. For more installation details: https://github.com/jvkersch/pyconcorde/blob/master/README.md
 ```
-> pip install pyconcorde
+> git clone https://github.com/jvkersch/pyconcorde
+> cd pyconcorde
+> pip install -e .
+```
+
+For the Python `tsp` package:
+```
 > pip install tsp
 ```
 

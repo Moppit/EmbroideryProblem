@@ -1,9 +1,9 @@
-from concorde.tsp import TSPSolver
-from concorde.tests.data_utils import get_dataset_path
+import math
 import tsp
 import importlib
+from concorde.tsp import TSPSolver
+from concorde.tests.data_utils import get_dataset_path
 util = importlib.import_module('util')
-import math
 
 class TSP_Solver:
     def __init__(self, pattern):
@@ -12,7 +12,7 @@ class TSP_Solver:
         self.multi_node_graph = None
 
     """
-    Reduction 1: to undirected TSP.
+    Theoretical reduction to TSP.
     Assigned self.symmetric_graph to a 2D adjacency matrix where 9999 means nodes are not connected 
     @param: None
     @return: None
@@ -38,7 +38,7 @@ class TSP_Solver:
             for node in node_map:
                 node_idx = node_map.index(node)
                 if node_idx != i-gap:
-                    dist = util.get_edge_length(node, node_map[i-gap])
+                    dist = util.get_edge_length( (node, node_map[i-gap]) )
                     reduction[i].append( (node_idx+gap, dist) )
 
         # Add all front edge gadgets
@@ -50,7 +50,7 @@ class TSP_Solver:
                 gadget_made = hashtable[v]
             for node in adj:
                 # Make distance half of the original
-                distance = util.get_edge_length(v, node)/2
+                distance = util.get_edge_length( (v, node) )/2
                 # If there are values in hash table, check if node matches
                 if node in gadget_made[0]:
                     shared_idx = gadget_made[0].index(node)
@@ -82,7 +82,7 @@ class TSP_Solver:
                 self.symmetric_graph[i][val[0]] = val[1]
 
     """
-    Reduction 2: Modified to accommodate TSP solvers, which only access each vertex once
+    Practical reduction to TSP: modified to accommodate TSP solvers, which only access each vertex once.
     Assigned self.multi_node_graph to a 2D adjacency matrix where 9999 means nodes are not connected 
     @param: None
     @return: None
@@ -118,7 +118,7 @@ class TSP_Solver:
                 node_idx = node_map.index(node)
                 # Make sure they don't have the same first node (could also check this by dist != 0)
                 if node_idx != i-gap and node[0] != node_map[i-gap][0]:
-                    dist = util.get_edge_length(node[0], node_map[i-gap][0])
+                    dist = util.get_edge_length( (node[0], node_map[i-gap][0]) )
                     reduction[i].append( (node_idx+gap, dist) )
 
         # Add all front edge gadgets
@@ -132,7 +132,7 @@ class TSP_Solver:
             # If not, create gadget for both sides
             else:
                 # Make distance half of the original
-                distance = util.get_edge_length(pair[0], pair[1])/2
+                distance = util.get_edge_length(pair)/2
 
                 # Add gadget to reduction
                 new_gadget = len(reduction)
@@ -158,7 +158,7 @@ class TSP_Solver:
     """
     Using the tsp Python package by Saito Tsutomu.
     URL: https://pypi.org/project/tsp/
-    Linear programming approach to solving TSP with fairly good precision
+    Linear programming approach to solving TSP with fairly good precision.
     """
     def tsp(self):
         # Edge case: check for no stitches
@@ -179,7 +179,8 @@ class TSP_Solver:
         return route_length - excess
 
     """
-    Using the PyConcorde by Joris Vankerschaver.
+    Using PyConcorde by Joris Vankerschaver.
+    URL: https://github.com/jvkersch/pyconcorde
     Python wrapper around Concorde, which is generally regarded as the best TSP solver
         created to this day. Uses branch and cut method (linear programming).
     """

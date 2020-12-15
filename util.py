@@ -4,22 +4,6 @@ import numpy as np
 from graphics import *
 
 """
-Graph class
-"""
-class Node:
-    def __init__(self):
-        self.identifier = ''
-        self.contents = None
-        self.edges = []
-
-class Graph:
-    def __init__(self):
-        self.graph = None
-
-    def insert_node(self, identifier, contents):
-        print('TODO: add node to graph')
-
-"""
 Generates a random instance of the embroidery problem.
 Inputs:
     m: number rows in Euclidean plane
@@ -29,14 +13,10 @@ Outputs: Euclidean graph
 """
 def random_pattern(m, n, num_front_stitches=1):#density=0.1):
     # Create a Euclidean graph in m x n plane
-    # There are at most m*n vertices, so there are at most a complete graph of front stitches
-    # num_front_stitches = int((m*n)*(m*n-1)/2)
     graph = {}
     # Use a while loop to avoid skipping stitches if repeats happen
     i = 0
     while i < num_front_stitches:
-        # num = random.random()
-        # if num < density:
         # Generate two stitching endpoints
         start_row, start_col = (np.random.choice(range(m+1)), np.random.choice(range(n+1)))
         end_row, end_col = (np.random.choice(range(m+1)), np.random.choice(range(n+1)))
@@ -62,34 +42,6 @@ def random_pattern(m, n, num_front_stitches=1):#density=0.1):
 
     return graph
 
-    # graph = [[None for _ in range(n)] for _ in range(m)]
-    # print(graph)
-    """
-    for i in range(num_front_stitches):
-        num = random.random()
-        if num < density:
-            # Generate two stitching endpoints
-            start_row, start_col = (np.random.choice(range(n)), np.random.choice(range(m)))
-            end_row, end_col = (np.random.choice(range(n)), np.random.choice(range(m)))
-
-    TODO: Continue here! Figure out how to best structure your graph
-
-    Node:
-        key = name
-        x = val
-        y = val
-        front_taken = []
-        back_taken = []
-        edges: [Node, Node, Node]
-
-    vertex: (x, y)
-    graph: {
-        (x, y): [(x1, y1), (x2, y2)]
-        (x1, y1): [(x, y), ]
-    }
-
-    """
-
 """
 Helper function: get distance between edge (which is a tuple of 2 coordinates)
 """
@@ -100,15 +52,24 @@ def get_edge_length(edge):
         return math.sqrt(x_diff**2 + y_diff**2)
 
 """
-Helper function: get distance between two given coordinates
+Helper function: consistently format edges given 2 vertices
 """
-def get_edge_length(a, b):
-        # Assume a edge is a tuple of 2 tuples ((a,b), (c,d))
-        x_diff = a[0] - b[0]
-        y_diff = a[1] - b[1]
-        return math.sqrt(x_diff**2 + y_diff**2)
-
-# TODO: add a benchmarking utility! Would be nice to have consistent format here
+def get_formatted_edge(v1, v2):
+    # Ensure uniqueness by ordering coordinates: <x, then <y if x's same
+    if v1[0] < v2[0]:
+        edge = (v1, v2)
+    elif v1[0] > v2[0]:
+        edge = (v2, v1)
+    else:
+        if v1[1] < v2[1]:
+            edge = (v1, v2)
+        elif v1[1] > v2[1]:
+            edge = (v2, v1)
+        else:
+            print('ERROR! Caught a self loop')
+            print(v1, v2)
+            exit(0)
+    return edge
 
 # Graph visualization util
 def visual(m, n, pattern):
